@@ -1,5 +1,5 @@
-const config = require('../config.js');
-const db = require('../database.js');
+const config = require('../../config.js');
+const db = require('../../database.js');
 
 class BattleRewards {
     constructor() {
