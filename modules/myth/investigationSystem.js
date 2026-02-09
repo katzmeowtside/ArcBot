@@ -1,4 +1,5 @@
 const db = require('../../database.js');
+const renderer = require('../../graphics/renderer.js');
 
 class UrbanMythGenerator {
     constructor() {
@@ -214,6 +215,22 @@ class UrbanMythGenerator {
             const cachedMyth = this.myths.get(mythId);
             cachedMyth.status = 'solved';
         }
+    }
+
+    // Generate a visual representation of the urban myth
+    async generateMythImage(mythId) {
+        const myth = await this.getUrbanMythById(mythId);
+        
+        if (!myth) {
+            throw new Error('Myth not found');
+        }
+        
+        const prompt = `A cinematic, atmospheric image of ${myth.phenomenon} at an ${myth.location}. 
+        Style: urban mystery, paranormal, highly detailed, spooky, cinematic lighting, 8k resolution.`;
+        
+        console.log(`Generating myth image for myth ID ${mythId} with prompt: ${prompt}`);
+        
+        return await renderer.generateImage(prompt, '16:9');
     }
 
     // Get all urban myths
