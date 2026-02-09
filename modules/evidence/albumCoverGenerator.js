@@ -76,34 +76,16 @@ class AlbumCoverGenerator {
         const albumTitle = this.generateAlbumTitle();
         const subtitle = this.generateSubtitle();
         
-        // Create a canvas (using mock canvas from the renderer)
-        const canvas = renderer.createCanvas(800, 800); // Square album cover
-        
-        // Create grunge/urban decay background
-        this.createGrungeBackground(canvas, style);
-        
-        // Add title text
-        this.addTitleText(canvas, songTitle, 400, 150);
-        
-        // Add parody subtitle
-        this.addSubtitleText(canvas, `${parodyTopic} Parody`, 400, 220);
-        
-        // Add band name
-        this.addBandName(canvas, `by ${bandName}`, 400, 300);
-        
-        // Add album title
-        this.addAlbumTitle(canvas, albumTitle, 400, 400);
-        
-        // Add subtitle
-        this.addSmallText(canvas, subtitle, 400, 450);
-        
-        // Add some grunge effects
-        this.addGrungeEffects(canvas);
-        
-        // Save the image to the renders folder
-        const filename = `album-cover-${Date.now()}.png`;
-        const filepath = path.join('./renders', filename);
-        await canvas.saveAsPNG(filepath);
+        // Construct a prompt for Imagen
+        const prompt = `A ${style} style album cover art for a band named "${bandName}" titled "${albumTitle}". 
+        The cover should feature elements related to "${parodyTopic}" and "${songTitle}". 
+        Visual style: ${style}, urban decay, grunge aesthetic, artistic, high quality, 4k. 
+        Text on cover: "${bandName}" and "${albumTitle}".`;
+
+        console.log(`Generating album cover with prompt: ${prompt}`);
+
+        // Use the renderer to generate the image via Imagen API
+        const filepath = await renderer.generateImage(prompt, '1:1');
         
         return {
             filepath: filepath,
@@ -111,109 +93,6 @@ class AlbumCoverGenerator {
             albumTitle: albumTitle,
             subtitle: subtitle
         };
-    }
-
-    // Create grunge/urban decay background
-    createGrungeBackground(canvas, style) {
-        // Base color based on style
-        let bgColor;
-        switch(style) {
-            case 'punk':
-                bgColor = '#8B0000'; // Dark red
-                break;
-            case 'indie':
-                bgColor = '#556B2F'; // Dark olive green
-                break;
-            case 'grunge':
-            default:
-                bgColor = '#2F4F4F'; // Dark slate gray
-        }
-        
-        canvas.setBackground(bgColor);
-        
-        // Add some texture effects (simulated)
-        for (let i = 0; i < 50; i++) {
-            const x = Math.random() * 800;
-            const y = Math.random() * 800;
-            const size = Math.random() * 10 + 2;
-            const alpha = Math.random() * 0.3 + 0.1;
-            
-            // Simulate texture with rectangles
-            canvas.drawRectangle(x, y, size, size, `rgba(${Math.floor(Math.random() * 100)}, ${Math.floor(Math.random() * 100)}, ${Math.floor(Math.random() * 100)}, ${alpha})`);
-        }
-    }
-
-    // Add title text
-    addTitleText(canvas, text, x, y) {
-        // Add some distortion to the position
-        const distortedX = x + (Math.random() * 10 - 5);
-        const distortedY = y + (Math.random() * 10 - 5);
-        
-        canvas.drawText(text, distortedX, distortedY, '#FFFFFF', 36);
-    }
-
-    // Add subtitle text
-    addSubtitleText(canvas, text, x, y) {
-        // Add some distortion to the position
-        const distortedX = x + (Math.random() * 8 - 4);
-        const distortedY = y + (Math.random() * 8 - 4);
-        
-        canvas.drawText(text, distortedX, distortedY, '#CCCCCC', 24);
-    }
-
-    // Add band name
-    addBandName(canvas, text, x, y) {
-        // Add some distortion to the position
-        const distortedX = x + (Math.random() * 6 - 3);
-        const distortedY = y + (Math.random() * 6 - 3);
-        
-        canvas.drawText(text, distortedX, distortedY, '#FFD700', 28);
-    }
-
-    // Add album title
-    addAlbumTitle(canvas, text, x, y) {
-        // Add some distortion to the position
-        const distortedX = x + (Math.random() * 8 - 4);
-        const distortedY = y + (Math.random() * 8 - 4);
-        
-        canvas.drawText(text, distortedX, distortedY, '#FFA500', 32);
-    }
-
-    // Add small text
-    addSmallText(canvas, text, x, y) {
-        // Add some distortion to the position
-        const distortedX = x + (Math.random() * 5 - 2.5);
-        const distortedY = y + (Math.random() * 5 - 2.5);
-        
-        canvas.drawText(text, distortedX, distortedY, '#AAAAAA', 18);
-    }
-
-    // Add grunge effects
-    addGrungeEffects(canvas) {
-        // Add some scratch marks (simulated)
-        for (let i = 0; i < 20; i++) {
-            const x = Math.random() * 800;
-            const y = Math.random() * 800;
-            const length = Math.random() * 50 + 10;
-            const angle = Math.random() * Math.PI * 2;
-            
-            // Simulate scratches with thin rectangles
-            const width = Math.random() * 2 + 0.5;
-            const height = Math.random() * 3 + 1;
-            
-            // Just draw small rectangles to simulate scratches
-            canvas.drawRectangle(x, y, width, height, `rgba(255, 255, 255, ${Math.random() * 0.1})`);
-        }
-        
-        // Add some stains (simulated)
-        for (let i = 0; i < 15; i++) {
-            const x = Math.random() * 800;
-            const y = Math.random() * 800;
-            const size = Math.random() * 50 + 20;
-            
-            // Simulate stains with circles
-            canvas.drawRectangle(x, y, size, size/2, `rgba(${Math.floor(Math.random() * 50)}, ${Math.floor(Math.random() * 50)}, ${Math.floor(Math.random() * 50)}, ${Math.random() * 0.1})`);
-        }
     }
 }
 
