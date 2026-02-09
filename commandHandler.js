@@ -79,12 +79,34 @@ class CommandHandler {
         }
     }
 
+    // Clear cache and reload all commands
+    async reloadCommands() {
+        console.log('Reloading commands...');
+        const modulesPath = path.join(__dirname, 'modules');
+        
+        if (fs.existsSync(modulesPath)) {
+            const moduleDirs = fs.readdirSync(modulesPath);
+            for (const moduleDir of moduleDirs) {
+                const modulePath = path.join(modulesPath, moduleDir);
+                if (fs.lstatSync(modulePath).isDirectory()) {
+                    const commandFiles = fs.readdirSync(modulePath).filter(file => file.endsWith('.js'));
+                    for (const file of commandFiles) {
+                        const filePath = path.resolve(modulePath, file);
+                        // Delete from require cache
+                        delete require.cache[filePath];
+                    }
+                }
+            }
+        }
+        
+        this.commands.clear();
+        await this.loadCommands();
+        await this.registerCommands();
+    }
+
     // Initialize the command handler
     async initialize() {
-        await this.loadCommands();
-        
-        // Register commands
-        await this.registerCommands();
+        await this.reloadCommands();
 
         // Handle interactions
         this.client.on('interactionCreate', async interaction => {

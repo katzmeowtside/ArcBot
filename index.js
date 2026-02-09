@@ -15,6 +15,7 @@ const client = new Client({
 
 // Initialize command handler
 const commandHandler = new CommandHandler(client);
+client.commandHandler = commandHandler;
 
 // When the client is ready, run this code
 client.once('ready', () => {
