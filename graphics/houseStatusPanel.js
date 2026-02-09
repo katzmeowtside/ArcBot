@@ -30,7 +30,14 @@ class HouseStatusPanel {
             throw new Error('Invalid house stats input. Expected object with integrity, heat, food, noise, power values between 0 and 100.');
         }
 
-        // Create a canvas (using mock canvas from the renderer)
+        // If API key is available, use Imagen for a high-quality visual representation
+        if (process.env.GOOGLE_API_KEY) {
+            const prompt = this.generatePrompt(houseStats);
+            console.log(`Generating house status image with prompt: ${prompt}`);
+            return await renderer.generateImage(prompt, '1:1');
+        }
+
+        // Fallback: Create a canvas (using mock canvas from the renderer)
         const canvas = renderer.createCanvas(800, 600);
         canvas.setBackground('#1e1e1e'); // Dark gray background
         
@@ -83,6 +90,21 @@ class HouseStatusPanel {
         await canvas.saveAsPNG(filepath);
         
         return filepath;
+    }
+
+    // Generate a descriptive prompt for the Imagen API based on house stats
+    generatePrompt(stats) {
+        const integrityDesc = stats.integrity < 30 ? 'dilapidated and crumbling' : stats.integrity < 70 ? 'worn down' : 'well-maintained';
+        const heatDesc = stats.heat < 30 ? 'freezing and frost-covered' : stats.heat > 80 ? 'stiflingly hot' : 'cozy';
+        const foodDesc = stats.food < 30 ? 'empty and starving' : 'stocked with supplies';
+        const noiseDesc = stats.noise > 70 ? 'noisy and chaotic' : 'quiet';
+        const powerDesc = stats.power < 30 ? 'dark with flickering candles' : 'brightly lit with electricity';
+
+        return `A cinematic 3D render of a ${integrityDesc} urban shelter. 
+        The interior is ${heatDesc}, ${foodDesc}, and ${powerDesc}. 
+        The atmosphere is ${noiseDesc}. 
+        Art style: realistic, post-apocalyptic, highly detailed, atmospheric lighting, 8k resolution. 
+        Owner: ${stats.owner || 'Unknown'}.`;
     }
 
     // Validate the input JSON
