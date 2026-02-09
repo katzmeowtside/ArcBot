@@ -45,9 +45,12 @@ module.exports = {
                 // Generate an image for the myth
                 const imagePath = await urbanMythGenerator.generateMythImage(myth.id);
                 
+                const { AttachmentBuilder } = require('discord.js');
+                const attachment = new AttachmentBuilder(imagePath, { name: 'myth.png' });
+
                 await interaction.editReply({
                     content: `🔍 **Urban Myth Investigation** 🔍\n\n**Location:** ${myth.location}\n**Phenomenon:** ${myth.phenomenon}\n**Witness Report:** ${myth.witness_report}\n\n**Myth ID:** ${myth.id}\n**Difficulty:** ${myth.difficulty}/3\n**Progress:** ${myth.progress}%\n**Clues Found:** ${myth.clues_found}`,
-                    files: [{ attachment: imagePath, name: 'myth.png' }]
+                    files: [attachment]
                 });
             } else if (subcommand === 'discover') {
                 // Create a new urban myth
@@ -56,9 +59,12 @@ module.exports = {
                 // Generate an image for the myth
                 const imagePath = await urbanMythGenerator.generateMythImage(myth.id);
                 
+                const { AttachmentBuilder } = require('discord.js');
+                const attachment = new AttachmentBuilder(imagePath, { name: 'myth.png' });
+
                 await interaction.editReply({
                     content: `🔍 **New Urban Myth Discovered!** 🔍\n\n**Location:** ${myth.location}\n**Phenomenon:** ${myth.phenomenon}\n**Witness Report:** ${myth.witness_report}\n\n**Myth ID:** ${myth.id}\n**Difficulty:** ${myth.difficulty}/3\n**Progress:** ${myth.progress}%\n**Clues Found:** ${myth.clues_found}`,
-                    files: [{ attachment: imagePath, name: 'myth.png' }]
+                    files: [attachment]
                 });
             } else if (subcommand === 'progress') {
                 const mythId = interaction.options.getInteger('myth_id');

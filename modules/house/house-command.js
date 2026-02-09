@@ -35,9 +35,12 @@ module.exports = {
                 const imagePath = await houseSimulation.generateStatusImage(userId);
                 
                 // Send the image to the user
+                const { AttachmentBuilder } = require('discord.js');
+                const attachment = new AttachmentBuilder(imagePath, { name: 'house-status.png' });
+
                 await interaction.editReply({
                     content: `Here's your house status, ${interaction.user.username}:`,
-                    files: [{ attachment: imagePath, name: 'house-status.png' }]
+                    files: [attachment]
                 });
             } else if (subcommand === 'repair') {
                 const amount = interaction.options.getInteger('amount') || 10;
@@ -47,9 +50,12 @@ module.exports = {
                 // Update the house status image after repair
                 const imagePath = await houseSimulation.generateStatusImage(userId);
                 
+                const { AttachmentBuilder } = require('discord.js');
+                const attachment = new AttachmentBuilder(imagePath, { name: 'house-status.png' });
+
                 await interaction.editReply({
                     content: `${result.message}\n\nUpdated house status:`,
-                    files: [{ attachment: imagePath, name: 'house-status.png' }]
+                    files: [attachment]
                 });
             }
         } catch (error) {
