@@ -83,10 +83,8 @@ class CommandHandler {
     async initialize() {
         await this.loadCommands();
         
-        // Register commands when client is ready
-        this.client.once('clientReady', async () => {
-            await this.registerCommands();
-        });
+        // Register commands
+        await this.registerCommands();
 
         // Handle interactions
         this.client.on('interactionCreate', async interaction => {

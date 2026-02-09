@@ -17,7 +17,7 @@ const client = new Client({
 const commandHandler = new CommandHandler(client);
 
 // When the client is ready, run this code
-client.once('clientReady', () => {
+client.once('ready', () => {
     console.log('Bot Online');
     
     // Initialize command handler
