@@ -1,6 +1,6 @@
 const fs = require('fs');
 const path = require('path');
-const renderer = require('../graphics/renderer.js');
+const renderer = require('../../graphics/renderer.js');
 
 class AlbumCoverGenerator {
     constructor() {
