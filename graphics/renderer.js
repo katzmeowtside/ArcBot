@@ -49,6 +49,11 @@ class GraphicsRenderer {
             fs.mkdirSync('./renders', { recursive: true });
         }
         this.apiKey = process.env.GOOGLE_API_KEY;
+        if (this.apiKey) {
+            console.log('GOOGLE_API_KEY found in environment.');
+        } else {
+            console.warn('GOOGLE_API_KEY NOT found in environment!');
+        }
     }
 
     // Create a new canvas (Mock for now, or could use node-canvas if installed)
@@ -64,6 +69,7 @@ class GraphicsRenderer {
         }
 
         const url = `https://generativelanguage.googleapis.com/v1beta/models/imagen-3.0-generate-002:predict?key=${this.apiKey}`;
+        console.log(`Calling Imagen API with prompt: "${prompt}"`);
         
         try {
             const response = await axios.post(url, {
@@ -81,6 +87,8 @@ class GraphicsRenderer {
                     'Content-Type': 'application/json'
                 }
             });
+
+            console.log('Imagen API response received.');
 
             if (response.data && response.data.predictions && response.data.predictions[0] && response.data.predictions[0].bytesBase64Encoded) {
                 const base64Image = response.data.predictions[0].bytesBase64Encoded;
