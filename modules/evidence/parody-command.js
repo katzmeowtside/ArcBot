@@ -34,6 +34,8 @@ module.exports = {
         const tone = interaction.options.getString('tone') || 'mild';
         const perform = interaction.options.getBoolean('perform') || false;
 
+        await interaction.deferReply();
+
         try {
             // Generate the parody lyrics with the specified tone
             const lyrics = parodyGenerator.generateParody(songTitle, topic, tone);
@@ -49,23 +51,20 @@ module.exports = {
                 const { AttachmentBuilder } = require('discord.js');
                 const attachment = new AttachmentBuilder(coverResult.filepath);
                 
-                await interaction.reply({
+                await interaction.editReply({
                     content: lyrics,
-                    files: [attachment],
-                    ephemeral: false // Make visible to everyone in the channel
+                    files: [attachment]
                 });
             } else {
                 // Send only the lyrics to the user
-                await interaction.reply({
-                    content: lyrics,
-                    ephemeral: false // Make visible to everyone in the channel
+                await interaction.editReply({
+                    content: lyrics
                 });
             }
         } catch (error) {
             console.error('Error executing parody command:', error);
-            await interaction.reply({
-                content: `An error occurred while generating the parody: ${error.message}`,
-                ephemeral: true
+            await interaction.editReply({
+                content: `An error occurred while generating the parody: ${error.message}`
             });
         }
     }

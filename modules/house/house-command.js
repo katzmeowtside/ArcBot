@@ -24,6 +24,8 @@ module.exports = {
         const userId = interaction.user.id;
         const username = interaction.user.username;
 
+        await interaction.deferReply();
+
         try {
             // Initialize house if it doesn't exist
             await houseSimulation.initializeHouse(userId, username);
@@ -33,7 +35,7 @@ module.exports = {
                 const imagePath = await houseSimulation.generateStatusImage(userId);
                 
                 // Send the image to the user
-                await interaction.reply({
+                await interaction.editReply({
                     content: `Here's your house status, ${interaction.user.username}:`,
                     files: [{ attachment: imagePath, name: 'house-status.png' }]
                 });
@@ -45,16 +47,15 @@ module.exports = {
                 // Update the house status image after repair
                 const imagePath = await houseSimulation.generateStatusImage(userId);
                 
-                await interaction.reply({
+                await interaction.editReply({
                     content: `${result.message}\n\nUpdated house status:`,
                     files: [{ attachment: imagePath, name: 'house-status.png' }]
                 });
             }
         } catch (error) {
             console.error('Error executing house command:', error);
-            await interaction.reply({
-                content: `An error occurred: ${error.message}`,
-                ephemeral: true
+            await interaction.editReply({
+                content: `An error occurred: ${error.message}`
             });
         }
     }
